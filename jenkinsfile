@@ -39,27 +39,28 @@ pipeline{
             }
         }
        
-        // stage('TRIVY FS SCAN') {
-        //     steps {
-        //         sh "trivy fs . > trivyfs.txt"
-        //     }
-        // }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
         stage("Docker Build & Push"){
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker-creds', toolName: 'docker'){   
-                       sh "docker build -t swiggy ."
+                    //   sh "docker build -t swiggy ."
+                       sh "docker build -t priyankabs20/swiggy:latest ."
                     //   sh "docker tag swiggy kastrov/swiggy:latest "
-                      sh "docker push priyankabs20/swiggy:latest "
+                       sh "docker push priyankabs20/swiggy:latest"
                     }
                 }
             }
         }
-        // stage("TRIVY"){
-        //     steps{
-        //         sh "trivy image kastrov/swiggy:latest > trivy.txt" 
-        //     }
-        // }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image kastrov/swiggy:latest > trivy.txt" 
+            }
+        }
         stage('Deploy to container'){
             steps{
                 sh 'docker run -d --name swiggy -p 3000:3000 priyankabs20/swiggy:latest'
