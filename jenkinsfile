@@ -39,11 +39,7 @@ pipeline{
             }
         }
        
-        stage('TRIVY FS SCAN') {
-            steps {
-                sh "trivy fs . > trivyfs.txt"
-            }
-        }
+        
         stage("Docker Build & Push"){
             steps{
                 script{
@@ -56,14 +52,10 @@ pipeline{
                 }
             }
         }
-        stage("TRIVY"){
-            steps{
-                sh "trivy image kastrov/swiggy:latest > trivy.txt" 
-            }
-        }
+        
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name swiggy -p 3000:3000 priyankabs20/swiggy:latest'
+                sh 'docker run -d --name swiggy-project -p 3000:3000 priyankabs20/swiggy:latest'
             }
         }
     }
